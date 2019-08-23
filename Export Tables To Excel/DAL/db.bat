@@ -1,1 +1,1 @@
-dotnet ef dbcontext scaffold "Data Source=Server;Initial Catalog=mydb;User ID=Suren;Password=pilonium9194" Microsoft.EntityFrameworkCore.SqlServer -o Models -f
+dotnet ef dbcontext scaffold "Data Source=Server;Initial Catalog=mydb;User ID=Suren;Password=************" Microsoft.EntityFrameworkCore.SqlServer -o Models -f

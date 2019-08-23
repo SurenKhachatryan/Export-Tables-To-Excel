@@ -20,7 +20,7 @@ namespace DAL.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=Server;Initial Catalog=mydb;User ID=Suren;Password=pilonium9194");
+                optionsBuilder.UseSqlServer("Data Source=Server;Initial Catalog=mydb;User ID=Suren;Password=************");
             }
         }
 
