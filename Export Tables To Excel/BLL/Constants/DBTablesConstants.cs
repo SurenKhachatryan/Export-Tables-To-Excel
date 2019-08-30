@@ -2,6 +2,7 @@
 {
     public static class DBTablesConstants
     {
-        public const string Users = "users";
+        public const string Sales = "sale";
+        public const string Products = "product";
     }
 }

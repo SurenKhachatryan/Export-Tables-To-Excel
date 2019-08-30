@@ -1,0 +1,68 @@
+Create Database StoreDB; 
+
+Use StoreDB;
+
+
+Create table Product
+(
+ Id int primary key Identity,
+ [Name] nvarchar(30) not null,
+ [Model] nvarchar(30) not null,
+ ReleaseDate Date not null
+)
+
+Create table sale
+(
+ Id int primary key Identity,
+ Price float not null,
+ Discount int null,
+ ProductId int references Product(Id)
+)
+
+Insert into sale Values
+(300,20,1),
+(400,20,2),
+(345,20,3),
+(30450,20,4),
+(305640,20,5),
+(387900,20,6),
+(356400,20,7),
+(305640,20,8),
+(36545600,20,9),
+(356400,20,10),
+(354600,20,11),
+(305640,20,12),
+(3654500,20,13),
+(3654500,20,14),
+(365400,20,15),
+(356400,20,16),
+(305460,20,17),
+(38700,20,18),
+(38700,20,19),
+(387500,20,20),
+(37800,20,21),
+(3745800,20,22)
+
+insert into Product values 
+('Apply','4S',GETDATE()),
+('Apply','5',GETDATE()),
+('Apply','5SE',GETDATE()),
+('Apply','6',GETDATE()),
+('Apply','6s',GETDATE()),
+('Apply','6s Plus',GETDATE()),
+('Apply','7',GETDATE()),
+('Apply','7s',GETDATE()),
+('Apply','7s Plus',GETDATE()),
+('Apply','8s',GETDATE()),
+('Apply','8s Plus',GETDATE()),
+('Apply','X',GETDATE()),
+('Apply','XS',GETDATE()),
+('Apply','XR',GETDATE()),
+('Sumsung','Galaxsy J200',GETDATE()),
+('Sumsung','S10',GETDATE()),
+('Sumsung','s6 edge',GETDATE()),
+('Sumsung','s7',GETDATE()),
+('Sumsung','A10',GETDATE()),
+('Sumsung','A40',GETDATE()),
+('Sumsung','A70',GETDATE()),
+('Sumsung','A90',GETDATE())

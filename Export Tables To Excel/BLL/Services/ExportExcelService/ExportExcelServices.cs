@@ -12,9 +12,9 @@ namespace BLL.Services.ExportExcelService
 {
     public class ExportExcelServices : IExportExcelServices
     {
-        private readonly mydbContext _db;
+        private readonly StoreDBContext _db;
 
-        public ExportExcelServices(mydbContext db)
+        public ExportExcelServices(StoreDBContext db)
         {
             _db = db;
         }
@@ -27,8 +27,11 @@ namespace BLL.Services.ExportExcelService
 
             switch (excel.TabelName.ToLower())
             {
-                case DBTablesConstants.Users:
-                    byteArrExcel = ExportToExcel(_db.User.ToList().MapToUserExcelModels(), DBTablesConstants.Users, "A1:C");
+                case DBTablesConstants.Sales:
+                    byteArrExcel = ExportToExcel(_db.Sale.ToList().MapToSaleExcelModels(), DBTablesConstants.Sales, "A1:D");
+                    break;
+                case DBTablesConstants.Products:
+                    byteArrExcel = ExportToExcel(_db.Product.ToList().MapToProductExcelModels(), DBTablesConstants.Products, "A1:D");
                     break;
             }
 

@@ -11,7 +11,7 @@ namespace Export_Tables_To_Excel
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IExportExcelServices, ExportExcelServices>();
-            services.AddDbContext<mydbContext>();
+            services.AddDbContext<StoreDBContext>();
             services.AddMvc();
         }
 
