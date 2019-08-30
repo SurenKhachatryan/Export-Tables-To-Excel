@@ -1,10 +1,10 @@
 ﻿using BLL.Constants;
 using BLL.Domains;
+using BLL.Mappers;
 using DAL.Models;
-using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
-using OfficeOpenXml.Style;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,70 +19,61 @@ namespace BLL.Services.ExportExcelService
             _db = db;
         }
 
-        public async Task<DownloadExcel> ExportToExcel(DownloadExcel dwexcel)
+        public async Task<ExcelModel> GetExcel(ExcelModel excel)
         {
             await Task.CompletedTask;
 
-            byte[] excel = default(byte[]);
+            var byteArrExcel = default(byte[]);
 
-            switch (dwexcel.TabelName)
+            switch (excel.TabelName.ToLower())
             {
                 case DBTablesConstants.Users:
-                    excel = ExportDBTableToExcel(_db.User, DBTablesConstants.Users);
+                    byteArrExcel = ExportToExcel(_db.User.ToList().MapToUserExcelModels(), DBTablesConstants.Users, "A1:C");
                     break;
             }
 
-            return new DownloadExcel
+            return new ExcelModel
             {
-                Excel = excel,
-                TabelName = $"{dwexcel.TabelName}.{DateTime.UtcNow.ToString("dd.MM.yyyy")}"
+                Excel = byteArrExcel,
+                TabelName = string.Join(".", excel.TabelName, DateTime.UtcNow.ToString("dd.MM.yyyy"))
             };
         }
 
-        private byte[] ExportDBTableToExcel<TEntity>(DbSet<TEntity> entities, string TableName) where TEntity : class
+        private byte[] ExportToExcel<TEntity>(List<TEntity> entities, string tableName, string range) where TEntity : class
         {
-            byte[] excel;
+            var excel = default(byte[]);
 
             using (var package = new ExcelPackage())
             {
-                var worksheet = package.Workbook.Worksheets.Add(TableName);
+                var worksheet = package.Workbook.Worksheets.Add(tableName);
 
-                AddColumns<TEntity>(worksheet);
-                AddRowsValues(worksheet, entities);
+                range = string.Join("", range, (entities.Count + 1));
+
+                AddColumns<TEntity>(worksheet, range);
+
+                worksheet.Cells["A2"].LoadFromCollection(entities);
+
                 excel = package.GetAsByteArray();
             }
 
             return excel;
         }
 
-        private void AddColumns<TEntity>(ExcelWorksheet worksheet) where TEntity : class
+
+        private void AddColumns<TEntity>(ExcelWorksheet worksheet, string range) where TEntity : class
         {
-            var properies = typeof(TEntity).GetProperties().ToList();
+            var props = typeof(TEntity).GetProperties().ToList();
 
-            for (int i = 1; i < (properies.Count + 1); i++)
+            using (var rng = worksheet.Cells[range])
             {
-                worksheet.Cells[1, i].Value = properies[i - 1].Name;
+                var table = worksheet.Tables.Add(rng, "name");
 
-                worksheet.Cells[1, i].Style.Font.Size = 12;
-                worksheet.Cells[1, i].Style.Font.Bold = true;
-                worksheet.Cells[1, i].Style.Border.Top.Style = ExcelBorderStyle.Hair;
-            }
-        }
+                var index = -1;
+                props.ForEach(x => table.Columns[++index].Name = x.Name);
 
-
-        private void AddRowsValues<TEntity>(ExcelWorksheet worksheet, DbSet<TEntity> entities) where TEntity : class
-        {
-            var lsEntities = entities.ToList();
-            var rowIndex = 0;
-            var startRow = 2;
-
-            for (int i = startRow; i < (lsEntities.Count + startRow); i++)
-            {
-                foreach (var item in lsEntities[i - startRow].GetType().GetProperties())
-                {
-                    worksheet.Cells[i, ++rowIndex].Value = item.GetValue(lsEntities[i - startRow]);
-                }
-                rowIndex = 0;
+                table.ShowFilter = true;
+                table.ShowTotal = true;
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
             }
         }
     }

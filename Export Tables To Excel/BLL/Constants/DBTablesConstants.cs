@@ -2,6 +2,6 @@
 {
     public static class DBTablesConstants
     {
-        public const string Users = "Users";
+        public const string Users = "users";
     }
 }

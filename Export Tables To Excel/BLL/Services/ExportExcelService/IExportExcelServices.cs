@@ -5,6 +5,6 @@ namespace BLL.Services.ExportExcelService
 {
     public interface IExportExcelServices
     {
-        Task<DownloadExcel> ExportToExcel(DownloadExcel dwexcel);
+        Task<ExcelModel> GetExcel(ExcelModel excel);
     }
 }

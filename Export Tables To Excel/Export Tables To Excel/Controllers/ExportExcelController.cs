@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Export_Tables_To_Excel.Controllers
 {
-    [Route("api/DownloadExcel")]
+    [Route("api/ExportExcel")]
     [ApiController]
     public class ExportExcelController : ControllerBase
     {
@@ -19,16 +19,16 @@ namespace Export_Tables_To_Excel.Controllers
 
         [HttpPost]
         [Route("DownloadExcel")]
-        public async Task<IActionResult> DownloadExcel(DownloadExcel dwexcel)
+        public async Task<IActionResult> DownloadExcel(ExcelModel dwexcel)
         {
-            var excel = await _exportExcelServices.ExportToExcel(dwexcel);
+            var excel = await _exportExcelServices.GetExcel(dwexcel);
 
             if (excel.Excel == null || excel.Excel.Length == 0)
                 return NotFound();
 
             return File(excel.Excel,
                         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        $"{excel.TabelName}.xlsx");
+                        string.Join("", excel.TabelName, ".xlsx"));
 
         }
 
